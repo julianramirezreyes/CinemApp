@@ -71,11 +71,13 @@ class GetDailySelection {
 
         candidates.shuffle();
         final selected = candidates.take(10).toList();
+        final selectedIds = selected.map((m) => m.id).toList();
 
         final newSelection = DailySelection(
           profileId: profileId,
           date: date,
           movies: selected,
+          shownMovieIds: selectedIds,
         );
 
         await repository.saveDailySelection(newSelection);

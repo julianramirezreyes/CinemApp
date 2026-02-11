@@ -8,12 +8,16 @@ class DailySelectionRow {
   final String profileId;
   final DateTime date;
   final List<int> movieIds;
+  final int remainingRefreshes;
+  final List<int> shownMovieIds;
 
   DailySelectionRow({
     this.id,
     required this.profileId,
     required this.date,
     required this.movieIds,
+    this.remainingRefreshes = 3,
+    this.shownMovieIds = const [],
   });
 
   factory DailySelectionRow.fromJson(Map<String, dynamic> json) {
@@ -22,6 +26,10 @@ class DailySelectionRow {
       profileId: json['profile_id'],
       date: DateTime.parse(json['date']),
       movieIds: List<int>.from(json['movie_ids'] ?? []),
+      remainingRefreshes: json['remaining_refreshes'] ?? 3,
+      shownMovieIds: json['shown_movie_ids'] != null
+          ? List<int>.from(json['shown_movie_ids'])
+          : [],
     );
   }
 }

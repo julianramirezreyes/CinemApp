@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -124,8 +125,9 @@ class MovieDetailsPage extends ConsumerWidget {
   }
 
   Widget _buildSliverAppBar(BuildContext context, MovieDetail details) {
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
     return SliverAppBar(
-      expandedHeight: 400.0,
+      expandedHeight: isDesktop ? 500.0 : 350.0,
       pinned: true,
       backgroundColor: const Color(0xFF121212),
       flexibleSpace: FlexibleSpaceBar(
@@ -506,10 +508,43 @@ class MovieDetailsPage extends ConsumerWidget {
               controller: YoutubePlayerController.fromVideoId(
                 videoId: videoKey,
                 autoPlay: false,
-                params: const YoutubePlayerParams(showFullscreenButton: true),
+                params: const YoutubePlayerParams(
+                  showFullscreenButton: true,
+                  strictRelatedVideos: true,
+                ),
               ),
               aspectRatio: 16 / 9,
             ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Center(
+          child: TextButton.icon(
+            onPressed: () async {
+              final url = Uri.parse(
+                'https://www.youtube.com/watch?v=$videoKey',
+              );
+              try {
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                } else {
+                  // Fallback to browser if app fails?
+                  await launchUrl(url, mode: LaunchMode.platformDefault);
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error al abrir YouTube: $e')),
+                  );
+                }
+              }
+            },
+            icon: const Icon(Icons.open_in_new, color: Colors.white70),
+            label: const Text(
+              'Ver en YouTube (si falla la reproducción)',
+              style: TextStyle(color: Colors.white70),
+            ),
+            style: TextButton.styleFrom(foregroundColor: Colors.white70),
           ),
         ),
       ],

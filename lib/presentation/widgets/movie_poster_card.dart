@@ -24,12 +24,13 @@ class _MoviePosterCardState extends State<MoviePosterCard> {
   bool _isHovered = false;
 
   @override
+  @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
-        onTap: widget.onTap,
+        onTap: () => setState(() => _isHovered = !_isHovered),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           transform: _isHovered
@@ -142,13 +143,16 @@ class _MoviePosterCardState extends State<MoviePosterCard> {
                           if (widget.onWatched != null ||
                               widget.onIgnored != null)
                             const SizedBox(height: 12),
-                          const Chip(
-                            label: Text('Detalles'),
+
+                          // Details Button
+                          ActionChip(
+                            label: const Text('Detalles'),
                             backgroundColor: Colors.white24,
-                            labelStyle: TextStyle(
+                            labelStyle: const TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 12,
                             ),
+                            onPressed: widget.onTap,
                           ),
                         ],
                       ),

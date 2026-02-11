@@ -28,6 +28,19 @@ class DailySelectionNotifier extends AsyncNotifier<DailySelection?> {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() => _fetchDailySelection());
   }
+
+  Future<void> refreshSelection() async {
+    state = const AsyncValue.loading();
+    final result = await ref
+        .read(refreshDailySelectionUseCaseProvider)
+        .call(_profileId);
+
+    result.fold(
+      (failure) =>
+          state = AsyncValue.error(failure.message, StackTrace.current),
+      (selection) => state = AsyncValue.data(selection),
+    );
+  }
 }
 
 final dailySelectionProvider =

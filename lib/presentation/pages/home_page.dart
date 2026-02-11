@@ -13,7 +13,31 @@ class HomePage extends ConsumerWidget {
     final dailySelectionState = ref.watch(dailySelectionProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Selección Diaria')),
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('lib/assets/icons/Cinemapp.png'),
+        ),
+        title: Text(
+          dailySelectionState.asData?.value != null
+              ? 'CinemApp (${dailySelectionState.asData!.value!.remainingRefreshes}/3)'
+              : 'CinemApp',
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed:
+                !dailySelectionState.isLoading &&
+                    dailySelectionState.asData?.value != null &&
+                    dailySelectionState.asData!.value!.remainingRefreshes > 0
+                ? () => ref
+                      .read(dailySelectionProvider.notifier)
+                      .refreshSelection()
+                : null,
+            tooltip: 'Refrescar selección (Consume 1 token)',
+          ),
+        ],
+      ),
       body: dailySelectionState.when(
         data: (selection) {
           if (selection == null || selection.movies.isEmpty) {

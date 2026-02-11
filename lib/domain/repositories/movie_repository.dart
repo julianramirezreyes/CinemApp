@@ -29,6 +29,10 @@ abstract class MovieRepository {
     DateTime date,
     String profileId,
   );
+  Future<Either<Failure, DailySelection>> refreshDailySelection(
+    DateTime date,
+    String profileId,
+  );
   Future<Either<Failure, void>> saveDailySelection(DailySelection selection);
 
   Future<Either<Failure, List<Interaction>>> getUserInteractions(

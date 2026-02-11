@@ -7,6 +7,7 @@ import '../../data/datasources/supabase_local_datasource.dart';
 import '../../data/repositories/movie_repository_impl.dart';
 import '../../domain/repositories/movie_repository.dart';
 import '../../domain/usecases/movie_usecases.dart';
+import '../../domain/usecases/refresh_daily_selection.dart';
 
 // External Services
 final httpClientProvider = Provider((ref) => http.Client());
@@ -44,4 +45,8 @@ final markMovieWatchedUseCaseProvider = Provider((ref) {
 
 final markMovieIgnoredUseCaseProvider = Provider((ref) {
   return MarkMovieIgnored(ref.read(movieRepositoryProvider));
+});
+
+final refreshDailySelectionUseCaseProvider = Provider((ref) {
+  return RefreshDailySelection(ref.read(movieRepositoryProvider));
 });

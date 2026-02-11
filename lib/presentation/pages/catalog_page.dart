@@ -20,6 +20,7 @@ class CatalogPage extends ConsumerStatefulWidget {
 
 class _CatalogPageState extends ConsumerState<CatalogPage> {
   final TextEditingController _searchController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Timer? _debounce;
   bool _isSearching = false;
 
@@ -48,6 +49,7 @@ class _CatalogPageState extends ConsumerState<CatalogPage> {
     });
   }
 
+  // ...
   @override
   Widget build(BuildContext context) {
     final catalogState = ref.watch(catalogProvider);
@@ -55,13 +57,14 @@ class _CatalogPageState extends ConsumerState<CatalogPage> {
     final isDesktop = MediaQuery.of(context).size.width >= 900;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: _buildSearchBar(),
         actions: [
           if (!isDesktop)
             IconButton(
               icon: const Icon(Icons.filter_list),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
             ),
         ],
       ),
